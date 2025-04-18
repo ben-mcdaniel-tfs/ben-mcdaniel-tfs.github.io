@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Electron Microscopy Quiz</title>
+  <input type="text" id="username" placeholder="Enter your screename here" required>
+  <style>
+   body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    line-height: 1.6;
+    background-color: #121212;
+    color: #e0e0e0;
+  }
+
+  .question {
+    margin-bottom: 20px;
+    background-color: #1e1e1e;
+    padding: 10px;
+    border-radius: 5px;
+  }
+
+  .answers label {
+    display: block;
+    margin: 5px 0;
+  }
+
+  .correct {
+    color: #00e676;
+    font-weight: bold;
+  }
+
+  .incorrect {
+    color: #ff1744;
+    font-weight: bold;
+  }
+
+  .explanation {
+    font-style: italic;
+    margin-top: 5px;
+    color: #b0bec5;
+  }
+
+  button {
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #555;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: #444;
+  }
+  </style>
+</head>
+<body>
+  <h1>Electron Microscopy Quiz</h1>
+  <form id="quizForm">
+
+    <!-- BEGIN: Questions -->
+    <!-- 50 Questions -->
+    <script>
+      const questionsData = [
+        {
+          q: "Who invented the first electron microscope?",
+          a: ["Albert Einstein", "Max Knoll and Ernst Ruska", "Louis de Broglie", "Paul Dirac"],
+          c: "b",
+          e: "Max Knoll and Ernst Ruska developed the first electron microscope in 1931, introducing imaging via electron beams."
+        },
+        {
+          q: "In what year was the first electron microscope developed?",
+          a: ["1905", "1928", "1931", "1940"],
+          c: "c",
+          e: "1931 marks the historic birth of electron microscopy by Knoll and Ruska."
+        },
+                {
+          q: "Which principle allows electron microscopes to achieve higher resolution than light microscopes?",
+          a: ["Gravitational lensing", "Electromagnetic interference", "Shorter wavelength of electrons", "Magnetic field manipulation"],
+          c: "c",
+          e: "Electron microscopes achieve higher resolution due to the much shorter wavelength of electrons compared to visible light."
+        },
+        {
+          q: "What type of electron microscope provides three-dimensional surface images?",
+          a: ["Transmission Electron Microscope (TEM)", "Light Microscope", "Scanning Electron Microscope (SEM)", "Atomic Force Microscope (AFM)"],
+          c: "c",
+          e: "SEM creates 3D-like images by scanning a focused beam of electrons across the sample surface."
+        },
+        {
+          q: "Which microscope transmits electrons through a thin sample?",
+          a: ["STM", "SEM", "TEM", "AFM"],
+          c: "c",
+          e: "Transmission Electron Microscopes (TEM) allow electrons to pass through thin specimens for internal structure imaging."
+        },
+        {
+          q: "Who won the Nobel Prize in Physics in 1986 for electron microscopy advancements?",
+          a: ["Gerd Binnig and Heinrich Rohrer", "Ernst Ruska", "Albert Einstein", "Louis de Broglie"],
+          c: "b",
+          e: "Ernst Ruska was awarded the Nobel Prize in 1986 for inventing the electron microscope."
+        },
+        {
+          q: "Which type of electron microscope uses a focused beam to scan the sample surface?",
+          a: ["TEM", "SEM", "STM", "AFM"],
+          c: "b",
+          e: "SEM focuses an electron beam on a surface and detects secondary electrons emitted to form an image."
+        },
+        {
+          q: "What does TEM stand for?",
+          a: ["Temporal Electron Microscopy", "Transitional Emission Microscope", "Transmission Electron Microscope", "Tertiary Electron Monitor"],
+          c: "c",
+          e: "TEM stands for Transmission Electron Microscope, which provides internal imaging by passing electrons through a sample."
+        },
+        {
+          q: "Which key component focuses the electron beam in electron microscopes?",
+          a: ["Magnetic lenses", "Optical lenses", "Vacuum pumps", "Cryogenic coolers"],
+          c: "a",
+          e: "Magnetic lenses use magnetic fields to focus and control electron beams."
+        },
+        {
+          q: "Why is a vacuum environment required in electron microscopy?",
+          a: ["To cool the sample", "To enhance color resolution", "To prevent electron scattering", "To reduce sample vibration"],
+          c: "c",
+          e: "A vacuum is necessary to avoid interactions between electrons and air molecules, which would scatter the beam."
+        },
+        {
+          q: "In what year was FEI Company founded?",
+          a: ["1965", "1971", "1981", "1995"],
+          c: "c",
+          e: "FEI was founded in 1981, becoming a leader in electron and ion beam microscopy."
+        },
+        {
+          q: "Where was FEI Company originally headquartered?",
+          a: ["Waltham, Massachusetts", "Hillsboro, Oregon", "San Diego, California", "Minneapolis, Minnesota"],
+          c: "b",
+          e: "FEI was based in Hillsboro, Oregon, a key hub for high-tech instrumentation."
+        },
+        // Questions 13 to 50
+        {
+          q: "What does FEI stand for?",
+          a: ["Focused Electron Instruments", "Field Emission Instruments", "Fine Electron Imaging", "Fast Electron Integration"],
+          c: "b",
+          e: "FEI stands for Field Emission Instruments, highlighting its roots in electron source technology."
+        },
+        {
+          q: "FEI was a pioneer in the development of what type of microscopy technology?",
+          a: ["Atomic Force Microscopy", "Helium Ion Microscopy", "DualBeam technology", "Confocal Microscopy"],
+          c: "c",
+          e: "FEI developed DualBeam technology, combining FIB and SEM in one system."
+        },
+        {
+          q: "FEI's DualBeam systems combine which two types of instruments?",
+          a: ["SEM and TEM", "FIB and SEM", "STM and AFM", "XRD and SEM"],
+          c: "b",
+          e: "DualBeam systems integrate a Focused Ion Beam with a Scanning Electron Microscope."
+        },
+        {
+          q: "What does FIB stand for in microscopy?",
+          a: ["Focused Ion Beam", "Fast Imaging Beam", "Fiber-Induced Beam", "Flux Induction Beam"],
+          c: "a",
+          e: "FIB stands for Focused Ion Beam, used for sample modification and analysis."
+        },
+        {
+          q: "FEI was acquired by Thermo Fisher Scientific in what year?",
+          a: ["2014", "2016", "2018", "2020"],
+          c: "b",
+          e: "Thermo Fisher acquired FEI in 2016 to expand its advanced instrumentation offerings."
+        },
+        {
+          q: "What was the approximate acquisition cost of FEI by Thermo Fisher?",
+          a: ["$1.2 billion", "$4.2 billion", "$8.3 billion", "$2.7 billion"],
+          c: "b",
+          e: "The acquisition cost was approximately $4.2 billion."
+        },
+        {
+          q: "After the acquisition, FEI became part of which Thermo Fisher division?",
+          a: ["Laboratory Products", "Analytical Instruments", "Life Sciences Solutions", "Specialty Diagnostics"],
+          c: "b",
+          e: "FEI was integrated into the Analytical Instruments division."
+        },
+        {
+          q: "Which FEI system is known for atomic-scale imaging and analysis?",
+          a: ["Talos", "Helios", "Tecnai", "Titan"],
+          c: "d",
+          e: "Titan systems are renowned for sub-angstrom resolution and advanced materials analysis."
+        },
+        {
+          q: "What is Thermo Fisher Scientific’s mission statement?",
+          a: ["Accelerating the pace of discovery", "Enabling customers to make the world healthier, cleaner, and safer", "Revolutionizing electron optics", "Engineering tomorrow’s microscopes"],
+          c: "b",
+          e: "Thermo Fisher’s mission emphasizes global impact in science and safety."
+        },
+        {
+          q: "Thermo Fisher is headquartered in which U.S. state?",
+          a: ["Oregon", "Massachusetts", "California", "Texas"],
+          c: "b",
+          e: "Its headquarters are located in Waltham, Massachusetts."
+        },
+        {
+          q: "What is the name of Thermo Fisher’s high-end TEM platform?",
+          a: ["Fusion", "Nova", "Titan Krios", "Apreo"],
+          c: "c",
+          e: "Titan Krios is a state-of-the-art cryo-TEM system used extensively in structural biology."
+        },
+        {
+          q: "Which field commonly uses the Titan Krios?",
+          a: ["Metallurgy", "Forensics", "Cryo-electron microscopy in structural biology", "Semiconductor inspection"],
+          c: "c",
+          e: "Cryo-EM is a critical application in structural biology, often using the Titan Krios."
+        },
+        {
+          q: "What major biological breakthrough was made possible with cryo-EM using Thermo Fisher microscopes?",
+          a: ["CRISPR-Cas9 gene editing", "3D structures of ribosomes", "Discovery of DNA", "mRNA sequencing"],
+          c: "b",
+          e: "Cryo-EM enabled high-resolution structures of ribosomes without needing crystallization."
+        },
+        {
+          q: "Thermo Fisher’s Helios platform is primarily designed for which application?",
+          a: ["Drug discovery", "Geology", "Materials science", "Cell culture"],
+          c: "c",
+          e: "The Helios DualBeam is widely used in materials science for precise imaging and milling."
+        },
+        {
+          q: "Which system integrates AI-assisted automation for electron microscopy workflows?",
+          a: ["Apreo 2", "Glacios 2", "Velox", "Tundra"],
+          c: "d",
+          e: "Tundra Cryo-TEM simplifies cryo-EM with AI-driven automation."
+        },
+        {
+          q: "Thermo Fisher’s Cryo-EM solutions are most often used by:",
+          a: ["High schools", "Hospitals", "Academic and pharmaceutical researchers", "Forensic investigators"],
+          c: "c",
+          e: "Academic and pharmaceutical researchers use cryo-EM to study biological structures."
+        },
+        {
+          q: "What is the purpose of Thermo Fisher’s Maps™ Software?",
+          a: ["Create genetic sequences", "Develop 3D simulations", "Automate imaging workflows", "Encrypt medical data"],
+          c: "c",
+          e: "Maps™ automates and streamlines EM imaging workflows."
+        },
+        {
+          q: "Which of the following instruments is optimized for semiconductor failure analysis?",
+          a: ["Glacios", "Helios G4 PFIB", "Titan Krios", "Quattro"],
+          c: "b",
+          e: "Helios G4 PFIB systems are used in semiconductor failure analysis."
+        },
+        {
+          q: "Which Nobel Prize-winning technique is closely linked to Thermo Fisher’s instruments?",
+          a: ["Mass spectrometry", "NMR spectroscopy", "Cryo-electron microscopy", "X-ray crystallography"],
+          c: "c",
+          e: "Cryo-EM earned the 2017 Nobel Prize in Chemistry and uses Thermo Fisher cryo-TEMs."
+        },
+        {
+          q: "Cryo-EM eliminates the need for what common preparation step in traditional EM?",
+          a: ["Sample cutting", "Staining", "Coating with gold", "Vacuum drying"],
+          c: "b",
+          e: "Cryo-EM preserves biological samples in a near-native state without staining."
+        },
+        {
+          q: "In 2020, Thermo Fisher’s EM systems played a critical role in research on which virus?",
+          a: ["HIV", "Zika", "COVID-19 (SARS-CoV-2)", "Ebola"],
+          c: "c",
+          e: "Cryo-EM was instrumental in visualizing the SARS-CoV-2 spike protein."
+        },
+        {
+          q: "What resolution level has Titan Krios achieved in structural biology studies?",
+          a: ["10 nm", "1 nm", "3 Ångströms", "100 nm"],
+          c: "c",
+          e: "Titan Krios enables near-atomic resolution (3 Å) imaging of biomolecules."
+        },
+        {
+          q: "Which of the following is NOT a product line by Thermo Fisher's EM group?",
+          a: ["Talos", "Apreo", "Helios", "Leica"],
+          c: "d",
+          e: "Leica is a separate company; Talos, Apreo, and Helios are Thermo Fisher platforms."
+        },
+        {
+          q: "Cryo-EM sample prep tools from Thermo Fisher include:",
+          a: ["Vitrobot", "AutoGrid", "Aquilos", "All of the above"],
+          c: "d",
+          e: "All are part of Thermo Fisher’s cryo-EM preparation toolkit."
+        },
+        {
+          q: "What imaging challenge does S/TEM address?",
+          a: ["Speed", "Molecular visualization", "Atomic resolution in both 2D and 3D", "Nanoparticle dispersion"],
+          c: "c",
+          e: "Scanning Transmission EM enables high-resolution imaging in multiple dimensions."
+        },
+        {
+          q: "Thermo Fisher supports which global structural biology initiative?",
+          a: ["Protein Data Bank", "Structural Biology Congress", "Human Genome Project", "CryoNet"],
+          c: "a",
+          e: "Thermo Fisher's data contributes to structures archived in the Protein Data Bank."
+        },
+        {
+          q: "The Krios G4 Cryo-TEM is an improvement over previous versions primarily in:",
+          a: ["Color accuracy", "Beam stability and automation", "Sample capacity", "Weight"],
+          c: "b",
+          e: "Krios G4 offers advanced automation and beam stability for high-throughput research."
+        },
+        {
+          q: "What software is commonly bundled with Thermo Fisher EMs for data visualization and control?",
+          a: ["ImageJ", "Velox", "Photoshop", "CryoSPARC"],
+          c: "b",
+          e: "Velox provides data acquisition, analysis, and visualization for Thermo EM platforms."
+        },
+        {
+          q: "Which element is often used in the field emission gun (FEG) of an electron microscope?",
+          a: ["Gold", "Silicon", "Tungsten", "Helium"],
+          c: "c",
+          e: "Tungsten is widely used due to its high melting point and electron emission properties."
+        },
+        {
+          q: "Which imaging mode reveals internal structure of samples in 3D using dual-beam technology?",
+          a: ["Cryo-EM", "STEM", "FIB-SEM tomography", "Confocal"],
+          c: "c",
+          e: "FIB-SEM tomography enables serial sectioning and 3D reconstruction of materials."
+        },
+        {
+          q: "Which microscope type uses scanning tunneling principles?",
+          a: ["TEM", "AFM", "STM", "SEM"],
+          c: "c",
+          e: "Scanning Tunneling Microscopy (STM) operates by measuring tunneling current at the atomic scale."
+        },
+        {
+          q: "Which physical principle allows SEMs to detect topography?",
+          a: ["Backscattered electrons", "Transmitted X-rays", "Phase contrast", "Tunneling currents"],
+          c: "a",
+          e: "SEMs detect topographical contrast via backscattered and secondary electrons."
+        },
+        {
+          q: "In what form does a cryo-EM sample need to be preserved?",
+          a: ["Dehydrated", "Coated in metal", "Embedded in resin", "Vitrified (flash frozen)"],
+          c: "d",
+          e: "Cryo-EM samples are vitrified to preserve their native hydrated state."
+        },
+        {
+          q: "What year did Ernst Ruska receive his Nobel Prize?",
+          a: ["1945", "1960", "1986", "1990"],
+          c: "c",
+          e: "Ernst Ruska received the Nobel Prize in Physics in 1986."
+        },
+        {
+          q: "Which of the following is a key advantage of cryo-EM over X-ray crystallography?",
+          a: ["Works with larger samples", "No need for crystallization", "Higher color resolution", "Better for metals"],
+          c: "b",
+          e: "Cryo-EM doesn't require crystals, allowing study of proteins in natural states."
+        },
+        {
+          q: "What is one common limiting factor of electron microscopy?",
+          a: ["Too small to image viruses", "Requires high temperatures", "Sample must be vacuum-stable", "Doesn’t support 3D imaging"],
+          c: "c",
+          e: "Electron microscopes require samples that can survive in a vacuum."
+        },
+        {
+          q: "Which industry benefits greatly from failure analysis with DualBeam systems?",
+          a: ["Agriculture", "Aerospace", "Semiconductors", "Pharmaceuticals"],
+          c: "c",
+          e: "DualBeam systems are essential for semiconductor defect analysis."
+        },
+        {
+          q: "The Apreo SEM series is known for its:",
+          a: ["Fast color imaging", "Energy dispersive X-ray analysis (EDS) capabilities", "Water imaging performance", "Infrared mapping"],
+          c: "b",
+          e: "Apreo SEMs are optimized for analytical performance, including EDS."
+        }
+
+      ];
+
+      window.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById("quizForm");
+        questionsData.forEach((item, index) => {
+          const qNum = index + 1;
+          const qDiv = document.createElement("div");
+          qDiv.className = "question";
+          qDiv.innerHTML = `<p>${qNum}. ${item.q}</p>`;
+
+          const aDiv = document.createElement("div");
+          aDiv.className = "answers";
+          ["a", "b", "c", "d"].forEach((label, i) => {
+            aDiv.innerHTML += `<label><input type='radio' name='q${qNum}' value='${label}'> ${label}) ${item.a[i]}</label><br>`;
+          });
+          qDiv.appendChild(aDiv);
+          form.insertBefore(qDiv, form.lastElementChild);
+        });
+
+        // Update answers and explanations
+        questionsData.forEach((item, i) => {
+          const qId = `q${i + 1}`;
+          correctAnswers[qId] = item.c;
+          explanations[qId] = item.e;
+        });
+      });
+    </script>
+
+    <button type="button" onclick="checkAnswers()">Submit Answers</button>
+  </form>
+
+  <div id="results"></div>
+
+  <script>
+  const correctAnswers = {};
+  const explanations = {};
+
+  function checkAnswers() {
+    let score = 0;
+
+    for (const [key, correct] of Object.entries(correctAnswers)) {
+      const qNum = key.slice(1);
+      const userAnswer = document.querySelector(`input[name="${key}"]:checked`);
+      const questionDiv = document.querySelector(`input[name="${key}"]`).closest('.question');
+
+      // Reset background
+      questionDiv.style.backgroundColor = "#1e1e1e";
+
+      // Remove any previous explanation
+      const oldExplanation = questionDiv.querySelector('.explanation');
+      if (oldExplanation) oldExplanation.remove();
+
+      let explanationText = explanations[key];
+      let explanationHTML;
+
+      if (userAnswer) {
+        const resultClass = userAnswer.value === correct ? 'correct' : 'incorrect';
+        if (resultClass === 'correct') {
+          score++;
+          questionDiv.style.backgroundColor = "#2e7d32";
+        } else {
+          questionDiv.style.backgroundColor = "#c62828";
+        }
+        explanationHTML = `<div class="explanation ${resultClass}">${resultClass.toUpperCase()}: ${explanationText}</div>`;
+      } else {
+        questionDiv.style.backgroundColor = "#c62828";
+        explanationHTML = `<div class="explanation incorrect">No answer selected: ${explanationText}</div>`;
+      }
+
+      questionDiv.insertAdjacentHTML('beforeend', explanationHTML);
+    }
+
+    document.getElementById('results').innerHTML =
+      `<h2>Results:</h2><h3>Score: ${score} / ${Object.keys(correctAnswers).length}</h3>`;
+  }
+  </script>
+</body>
+</html>
