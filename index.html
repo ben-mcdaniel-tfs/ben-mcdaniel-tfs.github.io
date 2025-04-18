@@ -4,26 +4,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Electron Microscopy Quiz</title>
+  <div id="timestamp" style="margin-bottom: 1rem;"></div>
   <input type="text" id="username" placeholder="Enter your screen name here" required>
   <style>
    body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 20px;
     line-height: 1.6;
     background-color: #121212;
     color: #e0e0e0;
+    padding: 2rem;
   }
 
   .question {
-    margin-bottom: 20px;
+    margin-bottom: 1.5rem;
     background-color: #1e1e1e;
-    padding: 10px;
-    border-radius: 5px;
+    padding: 1rem;
+    border-radius: 6px;
+    border-left: 5px solid #333;
+    transition: background-color 0.3s ease;
   }
 
   .answers label {
     display: block;
     margin: 5px 0;
+    cursor: pointer;
   }
 
   .correct {
@@ -38,26 +43,56 @@
 
   .explanation {
     font-style: italic;
-    margin-top: 5px;
+    margin-top: 8px;
     color: #b0bec5;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+  }
+
+  .question.submitted .explanation {
+    opacity: 1;
+  }
+
+  .correct-answer {
+    border-left: 4px solid #00e676;
+    padding-left: 10px;
+  }
+
+  .incorrect-answer {
+    border-left: 4px solid #ff1744;
+    padding-left: 10px;
   }
 
   button {
-    background-color: #333;
-    color: #fff;
-    border: 1px solid #555;
-    padding: 10px 15px;
-    border-radius: 5px;
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 4px;
+    font-size: 1rem;
     cursor: pointer;
+    margin-top: 20px;
   }
 
   button:hover {
-    background-color: #444;
+    background-color: #005bb5;
+  }
+
+  @media (max-width: 600px) {
+    body {
+      padding: 1rem;
+      font-size: 0.95rem;
+    }
+
+    .question {
+      padding: 0.75rem;
+    }
   }
   </style>
 </head>
 <body>
   <h1>Electron Microscopy Quiz</h1>
+  <div id="timestamp" style="margin-bottom: 1rem;"></div>
   <form id="quizForm">
 
     <!-- BEGIN: Questions -->
@@ -404,6 +439,8 @@
   const explanations = {};
 
   function checkAnswers() {
+    document.getElementById("timestamp").innerText = 
+    "Quiz completed at: " + new Date().toLocaleString();
     let score = 0;
 
     for (const [key, correct] of Object.entries(correctAnswers)) {
